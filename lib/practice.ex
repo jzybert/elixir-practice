@@ -12,14 +12,14 @@ defmodule Practice do
   end
 
   def calc(expr) do
-    # This is more complex, delegate to lib/practice/calc.ex
     Practice.Calc.calc(expr)
   end
 
   def factor(x) do
-    # Maybe delegate this too.
-    [1,2,x]
+    Practice.Factor.factor(x)
   end
 
-  # TODO: Add a palindrome? function.
+  def palindrome(x) do
+    Practice.Palindrome.palindrome(x)
+  end
 end
