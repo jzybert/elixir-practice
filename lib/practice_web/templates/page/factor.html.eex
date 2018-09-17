@@ -4,6 +4,6 @@
     <h2>Factor Results</h2>
 
     <p>x = <%= @x %></p>
-    <p>Prime factors of x = <%= @y %></p>
+    <p>Prime factors of x = [<%= Enum.join(@y, ", ") %>]</p>
   </div>
 </div>

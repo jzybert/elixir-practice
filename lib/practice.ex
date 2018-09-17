@@ -16,7 +16,7 @@ defmodule Practice do
   end
 
   def factor(x) do
-    Practice.Factor.factor(x)
+    Practice.Factor.factor(String.to_integer(x))
   end
 
   def palindrome(x) do
