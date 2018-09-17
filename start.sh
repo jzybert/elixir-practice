@@ -10,7 +10,3 @@ _build/prod/rel/practice/bin/practice stop || true
 echo "Starting app..."
 
 _build/prod/rel/practice/bin/practice start
-
-# TODO: Add a cron rule or systemd service file
-#       to start your app on system boot.
-

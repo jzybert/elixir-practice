@@ -1,0 +1,8 @@
+[Unit]
+Description=Phoenix service
+
+[Service]
+ExecStart=./start.sh
+
+[Install]
+WantedBy=multi-user.target
