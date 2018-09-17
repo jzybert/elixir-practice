@@ -11,8 +11,7 @@ defmodule Practice.Calc do
     |> String.split(" ")
     |> tag_tokens
     |> convert_to_postfix
-    |> reverse_to_prefix
-    |> evaluate
+    |> evaluate([])
     # Hint:
     # expr
     # |> split
@@ -61,18 +60,22 @@ defmodule Practice.Calc do
     end
   end
 
-  defp reverse_to_prefix(tokens), do: reverse_to_prefix(tokens, [])
-
-  defp reverse_to_prefix(tokens, stack) do
+  defp evaluate(tokens, stack) do
     case {tokens, stack} do
-      {[], stack} -> stack
-      {[{:num, _} | rest_num], stack} -> stack
-      {[{:op, precedence, _} | rest_op], stack} -> stack
+      {[], stack} -> hd stack
+      {[{:num, _} | rest_num], stack} -> evaluate(rest_num, [hd tokens] ++ stack)
+      {[{:op, _, op} | rest_op], [f, s, rest_stack]} ->
+        math = do_math(op, String.to_integer(s), String.to_integer(f))
+        evaluate(rest_op, [math] ++ stack)
     end
   end
 
-  defp evaluate(tokens) do
-    # Evaluate the expression
-    tokens
+  defp do_math(op, a, b) do
+    case op do
+      "+" -> a + b
+      "-" -> a - b
+      "*" -> a * b
+      "/" -> a / b
+    end
   end
 end
