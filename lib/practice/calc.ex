@@ -74,7 +74,7 @@ defmodule Practice.Calc do
       "+" -> a + b
       "-" -> a - b
       "*" -> a * b
-      "/" -> a / b
+      "/" -> Kernel.trunc(a / b)
     end
   end
 end
