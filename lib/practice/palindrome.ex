@@ -1,5 +1,5 @@
 defmodule Practice.Palindrome do
   def palindrome(x) do
-    x
+    x == String.reverse(x)
   end
 end
