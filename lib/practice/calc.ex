@@ -8,11 +8,11 @@ defmodule Practice.Calc do
     # This should handle +,-,*,/ with order of operations,
     # but doesn't need to handle parens.
     expr
-    |> String.split(~r/\s+/)
-    |> hd
-    |> parse_float
-    |> :math.sqrt()
-
+    |> String.split(" ")
+    |> tag_tokens
+    |> convert_to_postfix
+    |> reverse_to_prefix
+    |> evaluate
     # Hint:
     # expr
     # |> split
@@ -20,5 +20,59 @@ defmodule Practice.Calc do
     # |> convert to postfix
     # |> reverse to prefix
     # |> evaluate as a stack calculator using pattern matching
+  end
+
+  defp tag_tokens(split_expr) do
+    # Tags each token based on which type it is and returns that tagged list
+    tagged = for token <- split_expr do
+      cond do
+        token === "+" ->
+          {:op, 1, "+"}
+        token === "-" ->
+          {:op, 1, "-"}
+        token === "*" ->
+          {:op, 2, "*"}
+        token === "/" ->
+          {:op, 2, "/"}
+        true ->
+          {:num, token}
+      end
+    end
+    tagged
+  end
+
+  defp convert_to_postfix(tokens), do: convert_to_postfix(tokens, [])
+
+  defp convert_to_postfix(tokens, stack) do
+    case {tokens, stack} do
+      {[], stack} -> stack
+      {[{:num, _} | rest_num], stack} -> [hd tokens] ++ convert_to_postfix(rest_num, stack)
+      {[{:op, precedence, _} | rest_op], stack} ->
+        cond do
+          stack == [] ->
+            convert_to_postfix(rest_op, hd tokens ++ stack)
+          precedence >= hd stack ->
+            convert_to_postfix(rest_op, hd tokens ++ stack)
+          true ->
+            popped = hd stack
+            stack = tl stack
+            [popped] ++ convert_to_postfix(tokens, stack)
+        end
+    end
+  end
+
+  defp reverse_to_prefix(tokens), do: reverse_to_prefix(tokens, [])
+
+  defp reverse_to_prefix(tokens, stack) do
+    case {tokens, stack} do
+      {[], stack} -> stack
+      {[{:num, _} | rest_num], stack} -> stack
+      {[{:op, precedence, _} | rest_op], stack} -> stack
+    end
+  end
+
+  defp evaluate(tokens) do
+    # Evaluate the expression
+    tokens
   end
 end
