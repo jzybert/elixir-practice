@@ -12,13 +12,7 @@ defmodule Practice.Calc do
     |> tag_tokens
     |> convert_to_postfix
     |> evaluate([])
-    # Hint:
-    # expr
-    # |> split
-    # |> tag_tokens  (e.g. [+, 1] => [{:op, "+"}, {:num, 1.0}]
-    # |> convert to postfix
-    # |> reverse to prefix
-    # |> evaluate as a stack calculator using pattern matching
+    |> elem(1)
   end
 
   defp tag_tokens(split_expr) do
@@ -49,9 +43,9 @@ defmodule Practice.Calc do
       {[{:op, precedence, _} | rest_op], stack} ->
         cond do
           stack == [] ->
-            convert_to_postfix(rest_op, hd tokens ++ stack)
+            convert_to_postfix(rest_op, [hd tokens] ++ stack)
           precedence >= hd stack ->
-            convert_to_postfix(rest_op, hd tokens ++ stack)
+            convert_to_postfix(rest_op, [hd tokens] ++ stack)
           true ->
             popped = hd stack
             stack = tl stack
@@ -64,9 +58,14 @@ defmodule Practice.Calc do
     case {tokens, stack} do
       {[], stack} -> hd stack
       {[{:num, _} | rest_num], stack} -> evaluate(rest_num, [hd tokens] ++ stack)
-      {[{:op, _, op} | rest_op], [f, s, rest_stack]} ->
-        math = do_math(op, String.to_integer(s), String.to_integer(f))
-        evaluate(rest_op, [math] ++ stack)
+      {[{:op, _, op} | rest_op], stack} ->
+        first_pop = hd stack
+        stack = tl stack
+        second_pop = hd stack
+        stack = tl stack
+        num1 = elem(second_pop, 1)
+        num2 = elem(first_pop, 1)
+        evaluate(rest_op, [{:num, Integer.to_string(do_math(op, String.to_integer(num1), String.to_integer(num2)))}] ++ stack)
     end
   end
 
