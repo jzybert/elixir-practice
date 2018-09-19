@@ -13,6 +13,7 @@ defmodule Practice.Calc do
     |> convert_to_postfix
     |> evaluate([])
     |> elem(1)
+    |> String.to_integer
   end
 
   defp tag_tokens(split_expr) do
